@@ -1,0 +1,7 @@
+
+FHIR Queries:
+
+Get Observation resource of a patient: http://superbugai.erc.monash.edu:8082/fhir/Observation?subject=p99806512
+
+Get total number of encounters: http://superbugai.erc.monash.edu:8082/fhir/Encounter?_total=accurate
+
