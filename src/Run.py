@@ -1,5 +1,6 @@
 from ehrgen.omop_to_fhir import Migrate as MigrateOmopToFhir
 from ehrgen.gff_to_fhir import Migrate as MigrateGtfToFhir
+from ehrgen.remap_to_fhir import Migrate as MigrateRemapToFhir
 from ehrgen.config import RunConfig
 
 
@@ -48,6 +49,17 @@ if __name__ == "__main__":
         log.info('Performing GTF-to-FHIR conversion')
         if config['type'] == 'migrate':
             MigrateGtfToFhir.gtfToFhir(
+                indexFile=config['index_file'],
+                jsonTemplatePath=config['jsonTemplatePath'],
+                    save=config['save'],
+                    savePath=config['savePath'],
+                )
+
+
+    for config in RunConfig.run_config_remap_to_fhir:
+        log.info('Performing REMAP-to-FHIR conversion')
+        if config['type'] == 'migrate':
+            MigrateRemapToFhir.remapToFhir(
                 indexFile=config['index_file'],
                 jsonTemplatePath=config['jsonTemplatePath'],
                     save=config['save'],

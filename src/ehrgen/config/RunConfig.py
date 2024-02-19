@@ -91,11 +91,22 @@ run_config_fhir_to_omop = [
 
 
 run_config_gtf_to_fhir = [
+    # {
+    #     'type': 'migrate',
+    #     'index_file': os.environ['EHR_GENOMICS_BASE'] + '/data/genome/simulated/index.csv',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Measurement.json',
+    #     'save': True,
+    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/gtf_to_fhir/measurement',
+    # },
+]
+
+
+run_config_remap_to_fhir = [
     {
         'type': 'migrate',
         'index_file': os.environ['EHR_GENOMICS_BASE'] + '/data/genome/simulated/index.csv',
-        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Measurement.json',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/MolecularSequence.json',
         'save': True,
-        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/gtf_to_fhir/measurement',
+        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/remap_to_fhir/molecular_sequence',
     },
 ]
