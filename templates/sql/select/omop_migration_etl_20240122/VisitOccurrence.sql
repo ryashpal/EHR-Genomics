@@ -1,4 +1,5 @@
 select
+distinct
 ('E' || vo.visit_occurrence_id) as id,
 (
     case when vo.admitting_source_concept_id is null then 'outpatient' else 
@@ -13,4 +14,6 @@ from
 omop_migration_etl_20240122.cdm_visit_occurrence vo
 inner join omop_migration_etl_20240122.cdm_person per
 on per.person_source_value = vo.person_id::text
+inner join omop_migration_etl_20240122.data_matrix dm
+on vo.visit_occurrence_id = dm.visit_occurrence_id and vo.person_id = dm.person_id
 ;

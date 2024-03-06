@@ -26,6 +26,8 @@ if __name__ == "__main__":
                     sqlFilePath=config['sqlFilePath'],
                     jsonTemplatePath=config['jsonTemplatePath'],
                     mapping=config['json_sql_mapping'],
+                    readFromDb=config['readFromDb'],
+                    loadToFHIR = config['loadToFHIR'],
                     save=config['save'],
                     savePath=config['savePath']
                     )

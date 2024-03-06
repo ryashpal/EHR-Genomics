@@ -1,7 +1,10 @@
-
 FHIR Queries:
 
-Get Observation resource of a patient: http://superbugai.erc.monash.edu:8082/fhir/Observation?subject=p99806512
+Get total number of organizations: http://10.172.235.4:8080/fhir/Organization?_total=accurate
 
-Get total number of encounters: http://superbugai.erc.monash.edu:8082/fhir/Encounter?_total=accurate
+Get total number of patients: http://10.172.235.4:8080/fhir/Patient?_total=accurate
+
+Get Observation resource of a patient: http://10.172.235.4:8080/fhir/Observation?subject=p99806512
+
+Get total number of encounters: http://10.172.235.4:8080/fhir/Encounter?_total=accurate
 

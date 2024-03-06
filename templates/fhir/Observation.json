@@ -1,5 +1,4 @@
 {
-    "meta": "https://example.org/fhir/StructureDefinition/Measurement",
     "resourceType": "Observation",
     "id": "",
     "status": "final",
