@@ -33,8 +33,8 @@ run_config_omop_to_fhir = [
     # {
     #     'entity': 'Organization',
     #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/sql/select/omop_migration_etl_20240122/Organization.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Organization.json',
+    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/sql/select/omop_migration_etl_20240122/Organization.sql',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/Organization.json',
     #     'json_sql_mapping': {
     #         'id': 'id',
     #         'name': 'organization_name',
@@ -45,8 +45,8 @@ run_config_omop_to_fhir = [
     # {
     #     'entity': 'Patient',
     #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/sql/select/omop_migration_etl_20240122/Person.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Patient.json',
+    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/sql/select/omop_migration_etl_20240122/Person.sql',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/Patient.json',
     #     'json_sql_mapping': {
     #         'id': 'id',
     #         'gender': 'gender',
@@ -57,8 +57,8 @@ run_config_omop_to_fhir = [
     # {
     #     'entity': 'Encounter',
     #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/sql/select/omop_migration_etl_20240122/VisitOccurrence.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Encounter.json',
+    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/sql/select/omop_migration_etl_20240122/VisitOccurrence.sql',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/Encounter.json',
     #     'json_sql_mapping': {
     #         'id': 'id',
     #         'class||code': 'code',
@@ -73,8 +73,8 @@ run_config_omop_to_fhir = [
     {
         'entity': 'Observation',
         'type': 'migrate',
-        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/sql/select/omop_migration_etl_20240122/Measurement.sql',
-        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Observation.json',
+        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/sql/select/omop_migration_etl_20240122/Measurement.sql',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/Observation.json',
         'json_sql_mapping': {
             'id': 'id',
             'code||coding||code': 'measurement_concept_id',
@@ -95,8 +95,8 @@ run_config_omop_to_fhir = [
     # {
     #     'entity': 'Observation',
     #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/sql/select/omop_migration_etl_20240122/MeasurementConcept.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Observation.json',
+    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/sql/select/omop_migration_etl_20240122/MeasurementConcept.sql',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/Observation.json',
     #     'json_sql_mapping': {
     #         'id': 'id',
     #         'code||coding||code': 'measurement_concept_id',
@@ -152,7 +152,7 @@ run_config_gtf_to_fhir = [
     # {
     #     'type': 'migrate',
     #     'index_file': os.environ['EHR_GENOMICS_BASE'] + '/data/genome/simulated/index.csv',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/Measurement.json',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/Measurement.json',
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/gtf_to_fhir/measurement',
     # },
@@ -163,7 +163,7 @@ run_config_remap_to_fhir = [
     # {
     #     'type': 'migrate',
     #     'index_file': os.environ['EHR_GENOMICS_BASE'] + '/data/genome/simulated/index.csv',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/fhir/MolecularSequence.json',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_full/fhir/MolecularSequence.json',
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/remap_to_fhir/molecular_sequence',
     # },
