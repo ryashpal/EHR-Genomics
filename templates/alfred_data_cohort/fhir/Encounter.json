@@ -1,0 +1,21 @@
+{
+    "meta": "https://fhir-genomics.org/fhir/StructureDefinition/GenomicEncounter",
+    "class": {
+        "code": ""
+    },
+    "id": "",
+    "participant": {
+        "period": {
+            "end": "",
+            "start": ""
+        }
+    },
+    "resourceType": "Encounter",
+    "serviceProvider": {
+        "reference": "Organization/T001"
+    },
+    "subject": {
+        "reference": ""
+    },
+    "location": []
+}

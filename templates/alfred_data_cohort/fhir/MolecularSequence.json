@@ -1,0 +1,22 @@
+{
+    "meta": "https://example.org/fhir/StructureDefinition/BacterialMolecularSequence",
+    "resourceType": "MolecularSequence",
+    "id": "",
+    "type": "dna",
+    "subject": {
+      "reference": ""
+    },
+    "formatted": [ {
+      "contentType": "application/fasta",
+      "url": "",
+      "title": "FASTA File"
+    }, {
+      "contentType": "application/remap",
+      "url": "",
+      "title": "Tokens file"
+    } ],
+    "extension": [ {
+        "url": "https://example.org/fhir/StructureDefinition/SequenceLabel",
+        "valueString": ""
+      } ]
+}

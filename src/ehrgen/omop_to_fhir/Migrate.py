@@ -49,6 +49,7 @@ def omopToFhir(entity, sqlFilePath, jsonTemplatePath, mapping, readFromDb=False,
         i = 0
         fileList = os.listdir(rawSavePath)[:10000]
         while fileList and (len(fileList) > 0):
+            i += 1
             log.info('Records Completed: ' + str(i * 10000))
             poolArgs = []
             for rawFilePath in tqdm(fileList):

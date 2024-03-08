@@ -1,0 +1,1 @@
+select 'T001' as id, 'The Alfred Hospital' as organization_name

@@ -1,0 +1,18 @@
+{
+    "resourceType" : "RiskAssessment",
+    "id": "",
+    "status" : "final",
+    "subject" : {
+      "reference" : ""
+    },
+    "occurrenceDateTime" : "",
+    "prediction" : {
+        "outcome" : {
+            "text" : "Mortality"
+        },
+        "probabilityDecimal" : ""
+    },
+    "note" : {
+        "text" : ""
+    }
+}

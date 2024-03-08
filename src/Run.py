@@ -32,7 +32,11 @@ if __name__ == "__main__":
                     savePath=config['savePath']
                     )
             elif config['type'] == 'execute':
-                config['function']()
+                if 'function' in config:
+                    if 'args' in config:
+                        config['function'](args=config['args'])
+                    else:
+                        config['function']()
 
 
     # if RunConfig.run_config_fhir_to_omop:
