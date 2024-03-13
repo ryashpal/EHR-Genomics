@@ -5,6 +5,7 @@ import pathlib
 import random
 
 import pandas as pd
+import numpy as np
 
 from tqdm import tqdm
 from datetime import datetime
@@ -23,10 +24,9 @@ def remapToFhir(indexFile, jsonTemplatePath, save=False, savePath='./'):
     fhirTemplate = readTemplate(jsonTemplateFile=jsonTemplatePath)
     log.debug('fhirTemplate: ' + str(fhirTemplate))
     indexDf = pd.read_csv(indexFile)
-    for i, row in tqdm(indexDf[:10].iterrows(), total=indexDf.shape[0]):
-        print('row: ', row)
+    for i, row in tqdm(indexDf.iterrows(), total=indexDf.shape[0]):
         fhirJson = mapRemapToJson(row, fhirTemplate)
-        log.info('fhirJson: ' + str(fhirJson))
+        log.debug('fhirJson: ' + str(fhirJson))
         response = put('MolecularSequence/' + str(row.specimen_id), fhirJson)
         log.debug('response: ' + str(response.text))
         if save:
@@ -39,8 +39,8 @@ def remapToFhir(indexFile, jsonTemplatePath, save=False, savePath='./'):
 
 def mapRemapToJson(row, fhirTemplate):
     fhirTemplate['id'] = row['specimen_id']
-    fhirTemplate['subject']['reference'] = 'Patient/' + row['person_id']
-    fhirTemplate['formatted'][0]['url'] = row.fasta_file
-    fhirTemplate['formatted'][1]['url'] = row.remap_file
-    fhirTemplate['extension'][0]['valueString'] = random.choice(['Chromosome', 'Plasmid'])
+    fhirTemplate['subject']['reference'] = 'Patient/P' + str(row['person_id'])
+    fhirTemplate['formatted'][0]['url'] = ''
+    fhirTemplate['formatted'][1]['url'] = '' if pd.isnull(row.remap_file) else row.remap_file
+    fhirTemplate['extension'][0]['valueString'] = 'Chromosome'
     return fhirTemplate

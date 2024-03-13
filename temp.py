@@ -1,12 +1,14 @@
-import os
-import json
-from tqdm import tqdm
+import pandas as pd
 
 
-for file in tqdm(os.listdir('/home/vmadmin/workspace/EHR-Genomics/data/omop_to_fhir/observation/raw_to_be_corrected')):
-    with open('/home/vmadmin/workspace/EHR-Genomics/data/omop_to_fhir/observation/raw_to_be_corrected/' + file) as f:
-        fhirJson = json.load(f)
-    fhirJson['encounter']['reference'] = fhirJson['encounter']['reference'].replace('''Encounter/P''', '''Encounter/E''')
-    with open('/home/vmadmin/workspace/EHR-Genomics/data/omop_to_fhir/observation/raw/' + file, "w") as f:
-        json.dump(fhirJson, f)
-    os.remove('/home/vmadmin/workspace/EHR-Genomics/data/omop_to_fhir/observation/raw_to_be_corrected/' + file)
+cohortDf = pd.read_csv('/home/vmadmin/workspace/EHR-Genomics/data/omop_to_fhir/cohort_saur.csv')
+mappingDf = pd.read_csv('/home/vmadmin/workspace/genome_data/mapping.csv', sep='\t')
+
+
+def getRemapFile(tubeCode):
+    import os
+    remapFile = None
+    for folder in os.listdir('/home/vmadmin/workspace/genome_data/remap_files'):
+        if ('fasta.gz' in folder) and (tubeCode in folder):
+            remapFile = '/home/vmadmin/workspace/genome_data/remap_files/' + folder + '/train.csv.remap'
+    return remapFile
