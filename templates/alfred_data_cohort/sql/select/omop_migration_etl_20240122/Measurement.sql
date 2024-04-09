@@ -12,8 +12,8 @@ with stg1 as (
     mmt.value_as_number as value_as_number
     from
     omop_migration_etl_20240122.cdm_measurement mmt
-    inner join omop_migration_etl_20240122.cohort coh
-        on mmt.visit_occurrence_id::text = coh.visit_occurrence_id and mmt.person_id::text = coh.person_id
+    inner join omop_migration_etl_20240122.cohort_full coh
+        on mmt.person_id::text = coh.patient_id
     where value_as_number <> 'NaN'
     and value_as_number is not null
     and (mmt.person_id, mmt.visit_occurrence_id) IN (SELECT person_id, visit_occurrence_id FROM omop_migration_etl_20240122.data_matrix)

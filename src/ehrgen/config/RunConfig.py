@@ -11,26 +11,26 @@ import logging
 log = logging.getLogger("EHRQC")
 
 
-def createDataCohort():
+def createDataCohort(args):
 
     log.info('getting connection')
     con = getConnection()
 
     log.info('Creating table')
     cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS omop_migration_etl_20240122.cohort (person_id varchar, visit_occurrence_id varchar);")
+    cur.execute("CREATE TABLE IF NOT EXISTS omop_migration_etl_20240122.cohort_saur (person_id varchar);")
     cur.close()
 
-    log.info('Loading data')
-    cohortDf = pd.read_csv('/home/vmadmin/workspace/EHR-Genomics/data/omop_to_fhir/cohort_saur.csv')
+    log.info('Loading data from file: ' + args['cohort_file'])
+    log.info('Person ID Column in the file: ' + args['person_id_column'])
+    cohortDf = pd.read_csv(args['cohort_file'])
     for i, row in cohortDf.iterrows():
-        personId = row.person_id
-        visitOccurrenceId = row.visit_occurrence_id
+        personId = row[args['person_id_column']]
         cur = con.cursor()
-        cur.execute('INSERT INTO omop_migration_etl_20240122.cohort (person_id, visit_occurrence_id) VALUES (%s, %s)', (str(personId), str(visitOccurrenceId)))
+        cur.execute('INSERT INTO omop_migration_etl_20240122.cohort_saur (person_id) VALUES (' + str(personId) + ')')
         cur.close()
 
-    log.info('Shutting down')
+    log.info('Completed!!')
     con.commit()
     con.close()
 
@@ -56,7 +56,7 @@ def importRiskScores(args):
         personId = str(row.person_id)
         visitOccurrenceId = str(row.visit_occurrence_id)
         riskScore = str(row.preds)
-        description = args['description']
+        description = str(args['description'])
         cur = con.cursor()
         cur.execute(
             'INSERT INTO omop_migration_etl_20240122.risk_scores (person_id, visit_occurrence_id, risk_score, description) VALUES (%s, %s, %s, %s)',
@@ -97,7 +97,11 @@ def createLocationLookup():
 run_config_omop_to_fhir = [
     # {
     #     'type': 'execute',
-    #     'function': createDataCohort
+    #     'function': createDataCohort,
+    #     'args': {
+    #         'cohort_file': os.environ['GENOMICS_DATA_BASE'] + '/cohort_saur.csv',
+    #         'person_id_column': 'PATIENT_ID',
+    #         }
     # },
     # {
     #     'entity': 'Organization',
@@ -166,81 +170,99 @@ run_config_omop_to_fhir = [
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/observation',
     # },
-    # {
-    #     'type': 'execute',
-    #     'function': importRiskScores,
-    #     'args': {
-    #         'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_7_day/wb_30_wa_1.csv',
-    #         'description': "Model: XGBoost Ensemble, Window Before: 30 days, Window After: 1 day, Target: 7 day mortality",
-    #         }
-    # },
-    # {
-    #     'entity': 'RiskAssessment',
-    #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/RiskAssessment.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/RiskAssessment.json',
-    #     'json_sql_mapping': {
-    #         'id': 'id',
-    #         'subject||reference': 'person_id',
-    #         'occurrenceDateTime': 'occurrence_datetime',
-    #         'prediction||probabilityDecimal': 'risk_score',
-    #         'note||text': 'description',
-    #     },
-    #     'readFromDb': True,
-    #     'loadToFHIR': True,
-    #     'save': True,
-    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
-    # },
-    # {
-    #     'type': 'execute',
-    #     'function': importRiskScores,
-    #     'args': {
-    #         'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_14_day/wb_30_wa_1.csv',
-    #         'description': "Model: XGBoost Ensemble, Window Before: 30 days, Window After: 1 day, Target: 14 day mortality",
-    #         }
-    # },
-    # {
-    #     'entity': 'RiskAssessment',
-    #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/RiskAssessment.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/RiskAssessment.json',
-    #     'json_sql_mapping': {
-    #         'id': 'id',
-    #         'subject||reference': 'person_id',
-    #         'occurrenceDateTime': 'occurrence_datetime',
-    #         'prediction||probabilityDecimal': 'risk_score',
-    #         'note||text': 'description',
-    #     },
-    #     'readFromDb': True,
-    #     'loadToFHIR': False,
-    #     'save': True,
-    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
-    # },
-    # {
-    #     'type': 'execute',
-    #     'function': importRiskScores,
-    #     'args': {
-    #         'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_30_day/wb_30_wa_1.csv',
-    #         'description': "Model: XGBoost Ensemble, Window Before: 30 days, Window After: 1 day, Target: 30 day mortality",
-    #         }
-    # },
-    # {
-    #     'entity': 'RiskAssessment',
-    #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/RiskAssessment.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/RiskAssessment.json',
-    #     'json_sql_mapping': {
-    #         'id': 'id',
-    #         'subject||reference': 'person_id',
-    #         'occurrenceDateTime': 'occurrence_datetime',
-    #         'prediction||probabilityDecimal': 'risk_score',
-    #         'note||text': 'description',
-    #     },
-    #     'readFromDb': True,
-    #     'loadToFHIR': True,
-    #     'save': True,
-    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
-    # },
+    {
+        'type': 'execute',
+        'function': importRiskScores,
+        'args': {
+            'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_7_day/wb_30_wa_3.csv',
+            'description': {
+                "Model": "XGBoost Ensemble",
+                "Window Before": "30 days",
+                "Window After": "3 day",
+                "Target": "Mortality",
+                "Target Time": "7 day",
+                }
+            }
+    },
+    {
+        'entity': 'RiskAssessment',
+        'type': 'migrate',
+        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/RiskAssessment.sql',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/RiskAssessment.json',
+        'json_sql_mapping': {
+            'id': 'id',
+            'subject||reference': 'person_id',
+            'occurrenceDateTime': 'occurrence_datetime',
+            'prediction||probabilityDecimal': 'risk_score',
+            'note||text': 'description',
+        },
+        'readFromDb': True,
+        'loadToFHIR': True,
+        'save': True,
+        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
+    },
+    {
+        'type': 'execute',
+        'function': importRiskScores,
+        'args': {
+            'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_14_day/wb_30_wa_3.csv',
+            'description': {
+                "Model": "XGBoost Ensemble",
+                "Window Before": "30 days",
+                "Window After": "3 day",
+                "Target": "Mortality",
+                "Target Time": "14 day",
+                }
+            }
+    },
+    {
+        'entity': 'RiskAssessment',
+        'type': 'migrate',
+        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/RiskAssessment.sql',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/RiskAssessment.json',
+        'json_sql_mapping': {
+            'id': 'id',
+            'subject||reference': 'person_id',
+            'occurrenceDateTime': 'occurrence_datetime',
+            'prediction||probabilityDecimal': 'risk_score',
+            'note||text': 'description',
+        },
+        'readFromDb': True,
+        'loadToFHIR': True,
+        'save': True,
+        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
+    },
+    {
+        'type': 'execute',
+        'function': importRiskScores,
+        'args': {
+            'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_30_day/wb_30_wa_3.csv',
+            'description': {
+                "Model": "XGBoost Ensemble",
+                "Window Before": "30 days",
+                "Window After": "3 day",
+                "Target": "Mortality",
+                "Target Time": "30 day",
+                }
+            }
+    },
+    {
+        'entity': 'RiskAssessment',
+        'type': 'migrate',
+        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/RiskAssessment.sql',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/RiskAssessment.json',
+        'json_sql_mapping': {
+            'id': 'id',
+            'subject||reference': 'person_id',
+            'occurrenceDateTime': 'occurrence_datetime',
+            'prediction||probabilityDecimal': 'risk_score',
+            'note||text': 'description',
+        },
+        'readFromDb': True,
+        'loadToFHIR': True,
+        'save': True,
+        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
+    },
 ]
 
 
@@ -285,11 +307,11 @@ run_config_gtf_to_fhir = [
 
 
 run_config_remap_to_fhir = [
-    {
-        'type': 'migrate',
-        'index_file': os.environ['GENOMICS_DATA_BASE'] + '/index_saur.csv',
-        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/MolecularSequence.json',
-        'save': True,
-        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/molecular_sequence',
-    },
+    # {
+    #     'type': 'migrate',
+    #     'index_file': os.environ['GENOMICS_DATA_BASE'] + '/index_saur.csv',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/MolecularSequence.json',
+    #     'save': True,
+    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/molecular_sequence',
+    # },
 ]

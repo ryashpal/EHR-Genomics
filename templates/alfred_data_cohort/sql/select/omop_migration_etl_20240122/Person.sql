@@ -4,8 +4,8 @@ with stg1 as(
 	lower(per.gender_source_value) as gender
 	from
 	omop_migration_etl_20240122.cdm_person per
-	inner join omop_migration_etl_20240122.cohort coh
-	on coh.person_id = per.person_source_value
+	inner join omop_migration_etl_20240122.cohort_full coh
+	on coh.patient_id = per.person_source_value
 ), stg2 as (
 	select
 	distinct id as id,

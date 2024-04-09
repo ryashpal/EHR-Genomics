@@ -28,6 +28,16 @@ def readDbFromSql(sqlFilePath, params=None):
     return df
 
 
+def readDbFromSql(sqlFilePath, params=None):
+
+    sqlFile = open(sqlFilePath)
+    query = sqlFile.read()
+
+    con = getConnection()
+    df = pd.read_sql_query(query, con)
+    return df
+
+
 def updateDb(sqlQuery, params):
     con = getConnection()
     cur = con.cursor()
