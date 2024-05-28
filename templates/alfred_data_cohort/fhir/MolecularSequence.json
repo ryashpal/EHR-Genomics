@@ -1,22 +1,22 @@
 {
     "meta": "https://example.org/fhir/StructureDefinition/BacterialMolecularSequence",
     "resourceType": "MolecularSequence",
-    "id": "",
+    "id": "AH21H047",
     "type": "dna",
     "subject": {
-      "reference": ""
+      "reference": "Patient/P2481867"
     },
     "formatted": [ {
       "contentType": "application/fasta",
-      "url": "",
+      "url": "/path/to/fasta_file/AH21H047_short.fasta",
       "title": "FASTA File"
     }, {
       "contentType": "application/remap",
-      "url": "",
+      "url": "/path/to/remap_file/AH21H047_short.fasta.gz/train.csv.remap",
       "title": "Tokens file"
     } ],
     "extension": [ {
         "url": "https://example.org/fhir/StructureDefinition/SequenceLabel",
-        "valueString": ""
+        "valueString": "Chromosome"
       } ]
 }

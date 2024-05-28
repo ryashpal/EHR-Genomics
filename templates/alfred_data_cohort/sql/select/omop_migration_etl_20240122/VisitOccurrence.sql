@@ -15,7 +15,7 @@ with stg1 as (
     omop_migration_etl_20240122.cdm_visit_occurrence vo
     inner join omop_migration_etl_20240122.cdm_person per
     on per.person_source_value = vo.person_id::text
-    inner join omop_migration_etl_20240122.cohort_full coh
+    inner join omop_migration_etl_20240122.cohort_saur coh
     on vo.person_id::text = coh.patient_id
 )
 select * from stg1

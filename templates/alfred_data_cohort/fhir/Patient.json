@@ -3,6 +3,10 @@
     "id": "",
     "resourceType": "Patient",
     "active": true,
+    "name" : {
+        "use" : "official",
+        "text" : ""
+      },
     "gender": "",
     "managingOrganization": {
         "reference": "Organization/T001"

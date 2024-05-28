@@ -39,8 +39,8 @@ def remapToFhir(indexFile, jsonTemplatePath, save=False, savePath='./'):
 
 def mapRemapToJson(row, fhirTemplate):
     fhirTemplate['id'] = row['specimen_id']
-    fhirTemplate['subject']['reference'] = 'Patient/P' + str(row['person_id'])
+    fhirTemplate['subject']['reference'] = 'Patient/P' + str(row['patient_id'])
     fhirTemplate['formatted'][0]['url'] = ''
-    fhirTemplate['formatted'][1]['url'] = '' if pd.isnull(row.remap_file) else row.remap_file
+    fhirTemplate['formatted'][1]['url'] = '' if pd.isnull(row['remap_file']) else row['remap_file']
     fhirTemplate['extension'][0]['valueString'] = 'Chromosome'
     return fhirTemplate

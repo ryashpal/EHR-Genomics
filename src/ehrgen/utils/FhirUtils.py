@@ -6,7 +6,8 @@ from ehrgen.config import AppConfig
 
 def get(url):
     response = requests.get(
-        url=url
+        url=url,
+        headers={"Content-Type": "application/fhir+json", "authentication": "mjRmoNGW6klxaClkKhEkqi7HVYwx6NTH"},
     )
     return response
 
@@ -18,7 +19,7 @@ def put(entity, data):
     response = requests.put(
         url=fhirUrlEntity,
         json=data,
-        headers={"Content-Type": "application/fhir+json"}
+        headers={"Content-Type": "application/fhir+json", "authentication": "mjRmoNGW6klxaClkKhEkqi7HVYwx6NTH"},
     )
 
     return response

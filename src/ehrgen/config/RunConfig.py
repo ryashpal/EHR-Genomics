@@ -117,37 +117,38 @@ run_config_omop_to_fhir = [
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/organization',
     # },
-    # {
-    #     'entity': 'Patient',
-    #     'type': 'migrate',
-    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/Person.sql',
-    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/Patient.json',
-    #     'json_sql_mapping': {
-    #         'id': 'id',
-    #         'gender': 'gender',
-    #     },
-    #     'readFromDb': True,
-    #     'loadToFHIR': True,
-    #     'save': True,
-    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/patient',
-    # },
     {
-        'entity': 'Encounter',
+        'entity': 'Patient',
         'type': 'migrate',
-        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/VisitOccurrence.sql',
-        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/Encounter.json',
+        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/Person.sql',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/Patient.json',
         'json_sql_mapping': {
             'id': 'id',
-            'class||code': 'code',
-            'subject||reference': 'person_id',
-            'actualPeriod||end': 'visit_end_datetime',
-            'actualPeriod||start': 'visit_start_datetime',
+            'gender': 'gender',
+            'name||text': 'id',
         },
         'readFromDb': True,
         'loadToFHIR': True,
         'save': True,
-        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/encounter',
+        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/patient',
     },
+    # {
+    #     'entity': 'Encounter',
+    #     'type': 'migrate',
+    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/VisitOccurrence.sql',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/Encounter.json',
+    #     'json_sql_mapping': {
+    #         'id': 'id',
+    #         'class||code': 'code',
+    #         'subject||reference': 'person_id',
+    #         'period||end': 'visit_end_datetime',
+    #         'period||start': 'visit_start_datetime',
+    #     },
+    #     'readFromDb': True,
+    #     'loadToFHIR': True,
+    #     'save': True,
+    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/encounter',
+    # },
     # {
     #     'entity': 'Observation',
     #     'type': 'migrate',
@@ -165,7 +166,7 @@ run_config_omop_to_fhir = [
     #         'valueQuantity||unit': 'unit_concept_id',
     #         'valueQuantity||code': 'unit_concept_code',
     #     },
-    #     'readFromDb': False,
+    #     'readFromDb': True,
     #     'loadToFHIR': True,
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/observation',
@@ -176,11 +177,11 @@ run_config_omop_to_fhir = [
     #     'args': {
     #         'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_7_day/wb_30_wa_3.csv',
     #         'description': {
-    #             "Model": "XGBoost Ensemble",
-    #             "Window Before": "30 days",
-    #             "Window After": "3 day",
-    #             "Target": "Mortality",
-    #             "Target Time": "7 day",
+    #             "model": "XGBoost Ensemble",
+    #             "windowBefore": "30 days",
+    #             "windowAfter": "3 day",
+    #             "target": "Mortality",
+    #             "targetTime": "7 day",
     #             }
     #         }
     # },
@@ -207,11 +208,11 @@ run_config_omop_to_fhir = [
     #     'args': {
     #         'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_14_day/wb_30_wa_3.csv',
     #         'description': {
-    #             "Model": "XGBoost Ensemble",
-    #             "Window Before": "30 days",
-    #             "Window After": "3 day",
-    #             "Target": "Mortality",
-    #             "Target Time": "14 day",
+    #             "model": "XGBoost Ensemble",
+    #             "windowBefore": "30 days",
+    #             "windowAfter": "3 day",
+    #             "target": "Mortality",
+    #             "targetTime": "14 day",
     #             }
     #         }
     # },
@@ -238,11 +239,11 @@ run_config_omop_to_fhir = [
     #     'args': {
     #         'risk_scores_file': os.environ['EHR_DATA_BASE'] + '/blood_pos_cohort_20240119/predictions/death_30_day/wb_30_wa_3.csv',
     #         'description': {
-    #             "Model": "XGBoost Ensemble",
-    #             "Window Before": "30 days",
-    #             "Window After": "3 day",
-    #             "Target": "Mortality",
-    #             "Target Time": "30 day",
+    #             "model": "XGBoost Ensemble",
+    #             "windowBefore": "30 days",
+    #             "windowAfter": "3 day",
+    #             "target": "Mortality",
+    #             "targetTime": "30 day",
     #             }
     #         }
     # },
