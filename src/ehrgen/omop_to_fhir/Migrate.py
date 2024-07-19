@@ -80,15 +80,30 @@ def loadJsonToFhir(entity, save, savePath, rawSavePath, rawFilePath):
 
 
 def mapSqlToJson(row, fhirTemplate, mapping):
+
+    log.debug('row')
+    log.debug(row)
+    log.debug('fhirTemplate: ' + str(fhirTemplate))
+    log.debug('mapping: ' + str(mapping))
+
     for keys in mapping.keys():
+        log.debug('keys: ' + str(keys))
         value = mapping[keys]
         if(isinstance(value, str)):
             keyList = keys.split('||')
+            log.debug('keyList: ' + str(keyList))
             if len(keyList)>1:
                 childNode = fhirTemplate
                 for i in range((len(keyList) - 1)):
-                    childNode = childNode[keyList[i]]
-                childNode[keyList[i + 1]] = row[value]
+                    index = keyList[i]
+                    if index.isdigit():
+                        index = int(index)
+                    log.debug('index: ' + str(index))
+                    childNode = childNode[index]
+                index = keyList[i + 1]
+                if index.isdigit():
+                    index = int(index)
+                childNode[index] = row[value]
             else:
                 childNode = fhirTemplate
                 childNode[keys] = row[value]
@@ -110,4 +125,5 @@ def mapSqlToJson(row, fhirTemplate, mapping):
                         childNode[innerKeys] = row[innerValue]
             childNode = fhirTemplate
             childNode[keys] = [innerFhirTemplate]
+    log.debug('fhirTemplate: ' + str(fhirTemplate))
     return fhirTemplate

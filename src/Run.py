@@ -1,6 +1,6 @@
 from ehrgen.omop_to_fhir import Migrate as MigrateOmopToFhir
 from ehrgen.gff_to_fhir import Migrate as MigrateGtfToFhir
-from ehrgen.remap_to_fhir import Migrate as MigrateRemapToFhir
+from ehrgen.genome_to_fhir import Migrate as MigrateGenomeToFhir
 from ehrgen.config import RunConfig
 
 
@@ -62,10 +62,10 @@ if __name__ == "__main__":
                 )
 
 
-    for config in RunConfig.run_config_remap_to_fhir:
-        log.info('Performing REMAP-to-FHIR conversion')
+    for config in RunConfig.run_config_genome_to_fhir:
+        log.info('Performing Genome-to-FHIR conversion')
         if config['type'] == 'migrate':
-            MigrateRemapToFhir.remapToFhir(
+            MigrateGenomeToFhir.genomeToFhir(
                 indexFile=config['index_file'],
                 jsonTemplatePath=config['jsonTemplatePath'],
                     save=config['save'],

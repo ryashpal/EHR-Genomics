@@ -5,7 +5,8 @@
     "active": true,
     "name" : {
         "use" : "official",
-        "text" : ""
+        "family": "",
+        "given": [""]
       },
     "gender": "",
     "managingOrganization": {

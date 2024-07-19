@@ -7,16 +7,24 @@
       "reference": "Patient/P2481867"
     },
     "formatted": [ {
-      "contentType": "application/fasta",
-      "url": "/path/to/fasta_file/AH21H047_short.fasta",
-      "title": "FASTA File"
+      "contentType": "application/amr",
+      "url": "",
+      "title": "AMR File"
     }, {
       "contentType": "application/remap",
-      "url": "/path/to/remap_file/AH21H047_short.fasta.gz/train.csv.remap",
+      "url": "",
       "title": "Tokens file"
-    } ],
+      }, {
+        "contentType": "application/remap",
+        "url": "",
+        "title": "Fasta info file"
+        }, {
+          "contentType": "application/remap",
+          "url": "",
+          "title": "Remap info file"
+        } ],
     "extension": [ {
         "url": "https://example.org/fhir/StructureDefinition/SequenceLabel",
-        "valueString": "Chromosome"
+        "valueString": ""
       } ]
 }

@@ -18,14 +18,14 @@ import logging
 log = logging.getLogger("EHRQC")
 
 
-def remapToFhir(indexFile, jsonTemplatePath, save=False, savePath='./'):
+def genomeToFhir(indexFile, jsonTemplatePath, save=False, savePath='./'):
     log.info('indexFile: ' + indexFile)
     log.info('jsonTemplatePath: ' + jsonTemplatePath)
     fhirTemplate = readTemplate(jsonTemplateFile=jsonTemplatePath)
     log.debug('fhirTemplate: ' + str(fhirTemplate))
     indexDf = pd.read_csv(indexFile)
     for i, row in tqdm(indexDf.iterrows(), total=indexDf.shape[0]):
-        fhirJson = mapRemapToJson(row, fhirTemplate)
+        fhirJson = mapGenomeToJson(row, fhirTemplate)
         log.debug('fhirJson: ' + str(fhirJson))
         response = put('MolecularSequence/' + str(row.specimen_id), fhirJson)
         log.debug('response: ' + str(response.text))
@@ -37,10 +37,12 @@ def remapToFhir(indexFile, jsonTemplatePath, save=False, savePath='./'):
                 json.dump(fhirJson, f)
 
 
-def mapRemapToJson(row, fhirTemplate):
+def mapGenomeToJson(row, fhirTemplate):
     fhirTemplate['id'] = row['specimen_id']
     fhirTemplate['subject']['reference'] = 'Patient/P' + str(row['patient_id'])
-    fhirTemplate['formatted'][0]['url'] = ''
+    fhirTemplate['formatted'][0]['url'] = '' if pd.isnull(row['amr_file']) else row['amr_file']
     fhirTemplate['formatted'][1]['url'] = '' if pd.isnull(row['remap_file']) else row['remap_file']
+    fhirTemplate['formatted'][2]['url'] = '' if pd.isnull(row['fasta_info_file']) else row['fasta_info_file']
+    fhirTemplate['formatted'][3]['url'] = '' if pd.isnull(row['remap_info_file']) else row['remap_info_file']
     fhirTemplate['extension'][0]['valueString'] = 'Chromosome'
     return fhirTemplate
