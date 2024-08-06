@@ -25,6 +25,22 @@ def put(entity, data):
     return response
 
 
+def readData(url):
+    nextUrl = url
+    data = []
+    while(nextUrl):
+        print('Reading URL: ', nextUrl)
+        response = get(nextUrl)
+        responseText = json.loads(response.text)
+        data.append(responseText)
+        nextUrl = None
+        if 'link' in responseText:
+            for link in responseText['link']:
+                if link['relation'] == 'next':
+                    nextUrl = link['url']
+    return data
+
+
 def readFhirFromUrl(urlQueryStringPath):
     response = None
     urlQueryString = None
