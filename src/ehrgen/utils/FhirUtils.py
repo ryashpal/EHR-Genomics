@@ -1,7 +1,7 @@
 import json
 import requests
 
-from ehrgen.config import AppConfig
+from src.ehrgen.config import AppConfig
 
 
 def get(url):
@@ -23,6 +23,7 @@ def put(entity, data):
     )
 
     return response
+
 
 def readFhirFromUrl(urlQueryStringPath):
     response = None

@@ -1,0 +1,52 @@
+{
+    "resourceType": "Observation",
+    "id": "",
+    "status": "final",
+    "category": [
+        {
+            "coding": [
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                    "code": "laboratory",
+                    "display": "laboratory"
+                }
+            ]
+        }
+    ],
+    "code": {
+        "coding": [
+            {
+                "system": "http://acmelabs.org",
+                "code": "104177",
+                "display": "Blood culture"
+            },
+            {
+                "system": "http://loinc.org",
+                "code": "600-7",
+                "display": "Bacteria identified in Blood by Culture"
+            }
+        ]
+    },
+    "subject": {
+        "reference": ""
+    },
+    "valueCodeableConcept": {
+        "coding": [
+            {
+                "system": "http://snomed.info/sct",
+                "code": "3092008",
+                "display": "Staphylococcus aureus"
+            }
+        ]
+    },
+    "interpretation": [
+        {
+            "coding": [
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                    "code": "POS"
+                }
+            ]
+        }
+    ]
+}

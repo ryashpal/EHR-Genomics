@@ -1,7 +1,7 @@
-from ehrgen.omop_to_fhir import Migrate as MigrateOmopToFhir
-from ehrgen.gff_to_fhir import Migrate as MigrateGtfToFhir
-from ehrgen.genome_to_fhir import Migrate as MigrateGenomeToFhir
-from ehrgen.config import RunConfig
+from src.ehrgen.omop_to_fhir import Migrate as MigrateOmopToFhir
+from src.ehrgen.gff_to_fhir import Migrate as MigrateGtfToFhir
+from src.ehrgen.genome_to_fhir import Migrate as MigrateGenomeToFhir
+from src.ehrgen.config import RunConfig
 
 
 if __name__ == "__main__":
@@ -17,6 +17,9 @@ if __name__ == "__main__":
     ch.setFormatter(format)
     log.addHandler(ch)
 
+    log.info('-----------------------------------------------------------------------------')
+    log.info('-------------------------Importing data to FHIR------------------------------')
+    log.info('-----------------------------------------------------------------------------')
     if RunConfig.run_config_omop_to_fhir:
         for config in RunConfig.run_config_omop_to_fhir:
             log.info('Performing OMOP-to-FHIR conversion')

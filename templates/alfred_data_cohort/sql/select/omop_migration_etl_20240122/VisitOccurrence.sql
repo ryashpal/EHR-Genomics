@@ -18,5 +18,5 @@ with stg1 as (
     inner join omop_migration_etl_20240122.cohort_saur coh
     on vo.person_id::text = coh.person_id
 )
-select count(distinct id) from stg1
+select * from stg1
 ;

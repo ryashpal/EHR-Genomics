@@ -1,4 +1,4 @@
-from ehrgen.config import AppConfig
+from src.ehrgen.config import AppConfig
 
 import psycopg2
 import pandas as pd

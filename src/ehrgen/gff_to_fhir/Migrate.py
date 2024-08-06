@@ -6,9 +6,9 @@ import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
 
-from ehrgen.utils.FileUtils import readTemplate
-from ehrgen.utils.FhirUtils import put
-from ehrgen.utils.GenomeUtils import getGeneMarkers
+from src.ehrgen.utils.FileUtils import readTemplate
+from src.ehrgen.utils.FhirUtils import put
+from src.ehrgen.utils.GenomeUtils import getGeneMarkers
 
 import logging
 

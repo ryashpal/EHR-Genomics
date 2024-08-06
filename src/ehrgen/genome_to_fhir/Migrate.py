@@ -10,8 +10,8 @@ import numpy as np
 from tqdm import tqdm
 from datetime import datetime
 
-from ehrgen.utils.FileUtils import readTemplate
-from ehrgen.utils.FhirUtils import put
+from src.ehrgen.utils.FileUtils import readTemplate
+from src.ehrgen.utils.FhirUtils import put
 
 import logging
 

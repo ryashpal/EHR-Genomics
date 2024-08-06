@@ -1,34 +1,34 @@
 import json
-import requests
+from src.ehrgen.utils import FhirUtils
 
 
 def extractPatient(id):
     url = '''http://10.172.235.4:8080/fhir/Patient?_id=''' + id
-    response = requests.get(url=url)
+    response = FhirUtils.get(url=url)
     return json.loads(response.text)
 
 
 def extractObservation(id):
     url = '''http://10.172.235.4:8080/fhir/Observation?subject=''' + id
-    response = requests.get(url=url)
+    response = FhirUtils.get(url=url)
     return json.loads(response.text)
 
 
 def extractEncounter(id):
     url = '''http://10.172.235.4:8080/fhir/Encounter?subject=''' + id
-    response = requests.get(url=url)
+    response = FhirUtils.get(url=url)
     return json.loads(response.text)
 
 
 def extractRiskAssessment(id):
     url = '''http://10.172.235.4:8080/fhir/RiskAssessment?subject=''' + id
-    response = requests.get(url=url)
+    response = FhirUtils.get(url=url)
     return json.loads(response.text)
 
 
 def extractMolecularSequence(id):
     url = '''http://10.172.235.4:8080/fhir/MolecularSequence?subject=''' + id
-    response = requests.get(url=url)
+    response = FhirUtils.get(url=url)
     return json.loads(response.text)
 
 
@@ -40,6 +40,7 @@ def extractAllData(id):
     print('patientsList: ', patientsList)
 
     encountersResponse = extractEncounter(id=id)
+    print('encountersResponse: ', encountersResponse)
     encountersData = encountersResponse['entry'] if 'entry' in encountersResponse else []
     encountersList = [
         [

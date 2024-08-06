@@ -7,10 +7,10 @@ from datetime import datetime
 
 from multiprocessing import Pool
 
-from ehrgen.utils.DbUtils import readDbFromSql
-from ehrgen.utils.FileUtils import readTemplate
-from ehrgen.utils.FhirUtils import put
-from ehrgen.utils.Utils import convertIdFromFhirToOmop
+from src.ehrgen.utils.DbUtils import readDbFromSql
+from src.ehrgen.utils.FileUtils import readTemplate
+from src.ehrgen.utils.FhirUtils import put
+from src.ehrgen.utils.Utils import convertIdFromFhirToOmop
 
 import logging
 

@@ -3,12 +3,38 @@ import json
 
 import pandas as pd
 
-from ehrgen.utils.FhirUtils import get
-from ehrgen.utils.DbUtils import getConnection
+from src.ehrgen.utils.FhirUtils import get
+from src.ehrgen.utils.DbUtils import getConnection
 
 import logging
 
 log = logging.getLogger("EHRQC")
+
+
+def importIndexFile(args):
+
+    log.info('getting connection')
+    con = getConnection()
+
+    log.info('Creating table')
+    cur = con.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS omop_migration_etl_20240122.index_saur (specimen_id varchar, person_id varchar);")
+    cur.close()
+
+    log.info('Loading data from file: ' + args['cohort_file'])
+    log.info('Person ID Column in the file: ' + args['person_id_column'])
+    log.info('Specimen ID Column in the file: ' + args['specimen_id_column'])
+    cohortDf = pd.read_csv(args['cohort_file'])
+    for i, row in cohortDf.iterrows():
+        personId = row[args['person_id_column']]
+        specimenId = row[args['specimen_id_column']]
+        cur = con.cursor()
+        cur.execute('INSERT INTO omop_migration_etl_20240122.index_saur (person_id, specimen_id) VALUES (' + str(personId) + ", '" + str(specimenId) +"')")
+        cur.close()
+
+    log.info('Completed!!')
+    con.commit()
+    con.close()
 
 
 def createDataCohort(args):
@@ -126,6 +152,7 @@ run_config_omop_to_fhir = [
     #         'id': 'id',
     #         'gender': 'gender',
     #         'name||given||0': 'id',
+    #         'birthDate': 'birth_date',
     #     },
     #     'readFromDb': True,
     #     'loadToFHIR': True,
@@ -141,8 +168,8 @@ run_config_omop_to_fhir = [
     #         'id': 'id',
     #         'class||code': 'code',
     #         'subject||reference': 'person_id',
-    #         'period||end': 'visit_end_datetime',
-    #         'period||start': 'visit_start_datetime',
+    #         'actualPeriod||end': 'visit_end_datetime',
+    #         'actualPeriod||start': 'visit_start_datetime',
     #     },
     #     'readFromDb': True,
     #     'loadToFHIR': True,
@@ -263,6 +290,29 @@ run_config_omop_to_fhir = [
     #     'loadToFHIR': True,
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/risk_assessment',
+    # },
+    # {
+    #     'type': 'execute',
+    #     'function': importIndexFile,
+    #     'args': {
+    #         'cohort_file': os.environ['GENOMICS_DATA_BASE'] + '/index_saur.csv',
+    #         'person_id_column': 'patient_id',
+    #         'specimen_id_column': 'specimen_id',
+    #         }
+    # },
+    # {
+    #     'entity': 'Observation',
+    #     'type': 'migrate',
+    #     'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/Index.sql',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/BacteriaObservation.json',
+    #     'json_sql_mapping': {
+    #         'id': 'id',
+    #         'subject||reference': 'person_id',
+    #     },
+    #     'readFromDb': True,
+    #     'loadToFHIR': True,
+    #     'save': True,
+    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/Observation',
     # },
 ]
 
