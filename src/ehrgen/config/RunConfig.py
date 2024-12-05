@@ -95,6 +95,67 @@ def importRiskScores(args):
     con.close()
 
 
+def importAnnotations(args):
+
+    log.info('getting connection')
+    con = getConnection()
+
+    log.info('dropping table')
+    cur = con.cursor()
+    cur.execute("DROP TABLE IF EXISTS omop_migration_etl_20240122.genome_annotations;")
+    cur.close()
+
+    log.info('creating table')
+    cur = con.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS omop_migration_etl_20240122.genome_annotations (person_id varchar, visit_occurrence_id varchar, loci_id varchar, source varchar, type varchar, contig varchar, start_loc varchar, end_loc varchar);")
+    cur.close()
+
+    log.info('Loading Lookup Information')
+    lookupDf = pd.read_csv(os.environ['GENOMICS_DATA_BASE'] + '/patient_tube_id_mapping_full.tsv', sep='\t')
+
+    log.info('Loading data')
+    genomeAnnotationsDir = args['genome_annotations_dir']
+    for file in os.listdir(genomeAnnotationsDir):
+        if file.endswith('.gff3'):
+            print('file: ', file)
+            lookupRow = lookupDf[lookupDf.tube_code == file.split('.')[0]]
+            gffFile = pd.read_csv(
+                genomeAnnotationsDir + '/' + file, 
+                comment='#', 
+                sep='\t',
+                names=['contig', 'source', 'type', 'start_loc', 'end_loc', 'score', 'strand', 'phase', 'attributes']
+            ).dropna()
+            # annotationsDf = gffFile[gffFile.source != 'Prodigal']
+            annotationsDf = gffFile
+
+            for i, row in annotationsDf.iterrows():
+                if pd.isna(lookupRow.PATIENT_ID.values[0]):
+                    break
+                personId = str(int(lookupRow.PATIENT_ID.values[0]))
+                if pd.isna(lookupRow.EPISODE_ID.values[0]):
+                    break
+                visitOccurrenceId = str(int(lookupRow.EPISODE_ID.values[0]))
+                attributes = str(row.attributes)
+                geneNames = [attribute.split('=')[1] for attribute in attributes.split(';') if attribute.split('=')[0] == 'gene']
+                lociId = [attribute.split('=')[1] for attribute in attributes.split(';') if attribute.split('=')[0] == 'ID'][0]
+                lociId = geneNames[0] if (len(geneNames) > 0) else lociId
+                source = str(row.source)
+                seq_type = str(row.type)
+                contig = str(int(row.contig))
+                start_loc = str(int(row.start_loc))
+                end_loc = str(int(row.end_loc))
+                cur = con.cursor()
+                cur.execute(
+                    'INSERT INTO omop_migration_etl_20240122.genome_annotations (person_id, visit_occurrence_id, loci_id, source, type, contig, start_loc, end_loc) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                    (personId, visitOccurrenceId, lociId, source, seq_type, contig, start_loc, end_loc)
+                    )
+                cur.close()
+
+    log.info('Shutting down')
+    con.commit()
+    con.close()
+
+
 def createLocationLookup():
     log.info('getting connection')
     con = getConnection()
@@ -314,6 +375,34 @@ run_config_omop_to_fhir = [
     #     'save': True,
     #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/Observation',
     # },
+    # {
+    #     'type': 'execute',
+    #     'function': importAnnotations,
+    #     'args': {
+    #         'genome_annotations_dir': os.environ['GENOMICS_DATA_BASE'] + '/annotations/s_aureus/',
+    #         }
+    # },
+    {
+        'entity': 'Observation',
+        'type': 'migrate',
+        'sqlFilePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/sql/select/omop_migration_etl_20240122/SaurObservation.sql',
+        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/SaurObservation.json',
+        'json_sql_mapping': {
+            'id': 'id',
+            'subject||reference': 'person_id',
+            'encounter||reference': 'visit_occurrence_id',
+            'text||div': 'loci_id',
+            'component||0||valueRange||low||value': 'start_loc',
+            'component||0||valueRange||high||value': 'end_loc',
+            'component||1||valueInteger': 'contig',
+            'component||2||valueString': 'type',
+            'component||3||valueString': 'source',
+        },
+        'readFromDb': True,
+        'loadToFHIR': True,
+        'save': True,
+        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/SaurObservation/',
+    },
 ]
 
 
@@ -358,11 +447,11 @@ run_config_gtf_to_fhir = [
 
 
 run_config_genome_to_fhir = [
-    {
-        'type': 'migrate',
-        'index_file': os.environ['GENOMICS_DATA_BASE'] + '/index_saur.csv',
-        'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/MolecularSequence.json',
-        'save': True,
-        'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/molecular_sequence',
-    },
+    # {
+    #     'type': 'migrate',
+    #     'index_file': os.environ['GENOMICS_DATA_BASE'] + '/index_saur.csv',
+    #     'jsonTemplatePath': os.environ['EHR_GENOMICS_BASE'] + '/templates/alfred_data_cohort/fhir/MolecularSequence.json',
+    #     'save': True,
+    #     'savePath': os.environ['EHR_GENOMICS_BASE'] + '/data/omop_to_fhir/alfred_data_saur/molecular_sequence',
+    # },
 ]
